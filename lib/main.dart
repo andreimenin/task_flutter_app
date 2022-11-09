@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
               Container(
                 color: Colors.amber,
                 height: 30,
-                width: 300,
+                width: 30000,
                 child: Text(
                   "Diamante amarelo",
                   style: TextStyle(color: Colors.black, fontSize: 28),
