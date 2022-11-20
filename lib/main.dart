@@ -15,13 +15,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        //estrutura pronta de layout
-        appBar: AppBar(title: Text('Tarefas')),
+      home: Scaffold(//estrutura pronta de layout
+
+        appBar: AppBar(
+            leading: Container(color: Colors.black26),
+            title: Text('Tarefas')),
         body: ListView(
           children: [
             Task('Aprender Flutter'),
             Task('Dirigir'),
+            Task('Meditar na praia enquanto ouve as ondas do mar'),
+            Task('Meditar na praia enquanto ouve as ondas do mar'),
+            Task('Meditar na praia enquanto ouve as ondas do mar'),
+            Task('Meditar na praia enquanto ouve as ondas do mar'),
+            Task('Meditar na praia enquanto ouve as ondas do mar'),
+            Task('Meditar na praia enquanto ouve as ondas do mar'),
+            Task('Meditar na praia enquanto ouve as ondas do mar'),
             Task('Meditar na praia enquanto ouve as ondas do mar'),
           ],
         ),
@@ -72,14 +81,25 @@ class _TaskState extends State<Task> {
                                   fontSize: 24,
                                   overflow: TextOverflow.ellipsis),
                             )),
-                        ElevatedButton(
-                            onPressed: () {
-                              setState(() {//observando o valor da variavel nivel para re-renderizar a tela
-                                nivel++;
-                              });
-                              print(nivel);
-                            },
-                            child: Icon(Icons.arrow_drop_up))
+                        Container(
+                          height: 52,
+                          width: 52,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {//observando o valor da variavel nivel para re-renderizar a tela
+                                  nivel++;
+                                });
+                                print(nivel);
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.arrow_drop_up),
+                                  Text('UP', style: TextStyle(fontSize: 12),)
+                                ],
+                              )),
+                        )
                       ]),
                 ),
                 Row(
