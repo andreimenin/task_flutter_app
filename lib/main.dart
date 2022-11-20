@@ -22,16 +22,11 @@ class MyApp extends StatelessWidget {
             title: Text('Tarefas')),
         body: ListView(
           children: [
-            Task('Aprender Flutter'),
-            Task('Dirigir'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
-            Task('Meditar na praia enquanto ouve as ondas do mar'),
+            Task('Aprender Flutter', 'https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large'),
+            Task('Andar de Bike', 'https://thumbs.dreamstime.com/b/woman-mountain-bike-riding-ridge-carpathian-mountains-40195258.jpg'),
+            Task('Meditar na praia enquanto ouve as ondas do mar', 'https://manhattanmentalhealthcounseling.com/wp-content/uploads/2019/06/Top-5-Scientific-Findings-on-MeditationMindfulness-881x710.jpeg'),
+            Task('Ler', 'https://thumbs.dreamstime.com/b/book-to-read-142078.jpg'),
+            Task('Jogar', 'https://thumbs.dreamstime.com/z/playing-video-game-close-up-child-hands-th-late-night-54233429.jpg'),
           ],
         ),
         floatingActionButton: FloatingActionButton(onPressed: () {}),
@@ -42,8 +37,9 @@ class MyApp extends StatelessWidget {
 
 class Task extends StatefulWidget {
   final String nome;
+  final String foto;
 
-  const Task(this.nome, {Key? key}) : super(key: key);
+  const Task(this.nome, this.foto, {Key? key}) : super(key: key);
 
   @override
   State<Task> createState() => _TaskState();
@@ -72,6 +68,10 @@ class _TaskState extends State<Task> {
                           color: Colors.black26,
                           width: 72,
                           height: 100,
+                          child: Image.network(
+                            widget.foto,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         Container(
                             width: 200,
