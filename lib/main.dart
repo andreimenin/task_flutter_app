@@ -15,18 +15,31 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(//estrutura pronta de layout
+      home: Scaffold(
+        //estrutura pronta de layout
 
         appBar: AppBar(
-            leading: Container(color: Colors.black26),
-            title: Text('Tarefas')),
+            leading: Container(color: Colors.black26), title: Text('Tarefas')),
         body: ListView(
           children: [
-            Task('Aprender Flutter', 'https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large'),
-            Task('Andar de Bike', 'https://thumbs.dreamstime.com/b/woman-mountain-bike-riding-ridge-carpathian-mountains-40195258.jpg'),
-            Task('Meditar na praia enquanto ouve as ondas do mar', 'https://manhattanmentalhealthcounseling.com/wp-content/uploads/2019/06/Top-5-Scientific-Findings-on-MeditationMindfulness-881x710.jpeg'),
-            Task('Ler', 'https://thumbs.dreamstime.com/b/book-to-read-142078.jpg'),
-            Task('Jogar', 'https://thumbs.dreamstime.com/z/playing-video-game-close-up-child-hands-th-late-night-54233429.jpg'),
+            Task(
+                'Aprender Flutter',
+                'https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large',
+                3),
+            Task(
+                'Andar de Bike',
+                'https://thumbs.dreamstime.com/b/woman-mountain-bike-riding-ridge-carpathian-mountains-40195258.jpg',
+                2),
+            Task(
+                'Meditar na praia enquanto ouve as ondas do mar',
+                'https://manhattanmentalhealthcounseling.com/wp-content/uploads/2019/06/Top-5-Scientific-Findings-on-MeditationMindfulness-881x710.jpeg',
+                5),
+            Task('Ler',
+                'https://thumbs.dreamstime.com/b/book-to-read-142078.jpg', 4),
+            Task(
+                'Jogar',
+                'https://thumbs.dreamstime.com/z/playing-video-game-close-up-child-hands-th-late-night-54233429.jpg',
+                0),
           ],
         ),
         floatingActionButton: FloatingActionButton(onPressed: () {}),
@@ -38,8 +51,10 @@ class MyApp extends StatelessWidget {
 class Task extends StatefulWidget {
   final String nome;
   final String foto;
+  final int dificuldade;
 
-  const Task(this.nome, this.foto, {Key? key}) : super(key: key);
+  const Task(this.nome, this.foto, this.dificuldade, {Key? key})
+      : super(key: key);
 
   @override
   State<Task> createState() => _TaskState();
@@ -87,11 +102,31 @@ class _TaskState extends State<Task> {
                                 )),
                             Row(
                               children: [
-                                Icon(Icons.star, size: 15, color: Colors.blue),
-                                Icon(Icons.star, size: 15, color: Colors.blue),
-                                Icon(Icons.star, size: 15, color: Colors.blue),
-                                Icon(Icons.star, size: 15, color: Colors.blue[100]),
-                                Icon(Icons.star, size: 15, color: Colors.blue[100]),
+                                Icon(Icons.star,
+                                    size: 15,
+                                    color: (widget.dificuldade >= 1)
+                                        ? Colors.blue
+                                        : Colors.blue[100]),
+                                Icon(Icons.star,
+                                    size: 15,
+                                    color: (widget.dificuldade >= 2)
+                                        ? Colors.blue
+                                        : Colors.blue[100]),
+                                Icon(Icons.star,
+                                    size: 15,
+                                    color: (widget.dificuldade >= 3)
+                                        ? Colors.blue
+                                        : Colors.blue[100]),
+                                Icon(Icons.star,
+                                    size: 15,
+                                    color: (widget.dificuldade >= 4)
+                                        ? Colors.blue
+                                        : Colors.blue[100]),
+                                Icon(Icons.star,
+                                    size: 15,
+                                    color: (widget.dificuldade >= 5)
+                                        ? Colors.blue
+                                        : Colors.blue[100]),
                               ],
                             ),
                           ],
@@ -101,17 +136,22 @@ class _TaskState extends State<Task> {
                           width: 52,
                           child: ElevatedButton(
                               onPressed: () {
-                                setState(() {//observando o valor da variavel nivel para re-renderizar a tela
+                                setState(() {
+                                  //observando o valor da variavel nivel para re-renderizar a tela
                                   nivel++;
                                 });
                                 print(nivel);
                               },
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Icon(Icons.arrow_drop_up),
-                                  Text('UP', style: TextStyle(fontSize: 12),)
+                                  Text(
+                                    'UP',
+                                    style: TextStyle(fontSize: 12),
+                                  )
                                 ],
                               )),
                         )
@@ -124,9 +164,10 @@ class _TaskState extends State<Task> {
                       padding: const EdgeInsets.all(8),
                       child: Container(
                         child: LinearProgressIndicator(
-                          color: Colors.white,
-                          value: nivel/10
-                        ),
+                            color: Colors.white,
+                            value: (widget.dificuldade > 0)
+                                ? (nivel / widget.dificuldade)
+                                : 1),
                         width: 200,
                       ),
                     ),
