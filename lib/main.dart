@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool opacidade = true;
 
   // This widget is the root of your application.
   @override
@@ -20,29 +27,41 @@ class MyApp extends StatelessWidget {
 
         appBar: AppBar(
             leading: Container(color: Colors.black26), title: Text('Tarefas')),
-        body: ListView(
-          children: [
-            Task(
-                'Aprender Flutter',
-                'https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large',
-                3),
-            Task(
-                'Andar de Bike',
-                'https://thumbs.dreamstime.com/b/woman-mountain-bike-riding-ridge-carpathian-mountains-40195258.jpg',
-                2),
-            Task(
-                'Meditar na praia enquanto ouve as ondas do mar',
-                'https://manhattanmentalhealthcounseling.com/wp-content/uploads/2019/06/Top-5-Scientific-Findings-on-MeditationMindfulness-881x710.jpeg',
-                5),
-            Task('Ler',
-                'https://thumbs.dreamstime.com/b/book-to-read-142078.jpg', 4),
-            Task(
-                'Jogar',
-                'https://thumbs.dreamstime.com/z/playing-video-game-close-up-child-hands-th-late-night-54233429.jpg',
-                0),
-          ],
+        body: AnimatedOpacity(
+          opacity: opacidade ? 1 : 0,
+          duration: Duration(milliseconds: 800),
+          child: ListView(
+            children: [
+              Task(
+                  'Aprender Flutter',
+                  'https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large',
+                  3),
+              Task(
+                  'Andar de Bike',
+                  'https://thumbs.dreamstime.com/b/woman-mountain-bike-riding-ridge-carpathian-mountains-40195258.jpg',
+                  2),
+              Task(
+                  'Meditar na praia enquanto ouve as ondas do mar',
+                  'https://manhattanmentalhealthcounseling.com/wp-content/uploads/2019/06/Top-5-Scientific-Findings-on-MeditationMindfulness-881x710.jpeg',
+                  5),
+              Task('Ler',
+                  'https://thumbs.dreamstime.com/b/book-to-read-142078.jpg', 4),
+              Task(
+                  'Jogar',
+                  'https://thumbs.dreamstime.com/z/playing-video-game-close-up-child-hands-th-late-night-54233429.jpg',
+                  0),
+            ],
+          ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {}),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              setState((){
+                {
+                  opacidade = !opacidade;
+                }
+              });
+            },
+            child: Icon(Icons.remove_red_eye)),
       ),
     );
   }
