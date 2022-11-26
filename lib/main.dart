@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nosso_primeiro_projeto/difficulty.dart';
 
 void main() {
   runApp(MyApp());
@@ -54,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
-              setState((){
+              setState(() {
                 {
                   opacidade = !opacidade;
                 }
@@ -69,7 +70,7 @@ class _MyAppState extends State<MyApp> {
 class Task extends StatefulWidget {
   final String nome;
   final String foto;
-  final int dificuldade;
+  final String dificuldade;
 
   const Task(this.nome, this.foto, this.dificuldade, {Key? key})
       : super(key: key);
@@ -132,35 +133,7 @@ class _TaskState extends State<Task> {
                                       fontSize: 24,
                                       overflow: TextOverflow.ellipsis),
                                 )),
-                            Row(
-                              children: [
-                                Icon(Icons.star,
-                                    size: 15,
-                                    color: (widget.dificuldade >= 1)
-                                        ? Colors.blue
-                                        : Colors.blue[100]),
-                                Icon(Icons.star,
-                                    size: 15,
-                                    color: (widget.dificuldade >= 2)
-                                        ? Colors.blue
-                                        : Colors.blue[100]),
-                                Icon(Icons.star,
-                                    size: 15,
-                                    color: (widget.dificuldade >= 3)
-                                        ? Colors.blue
-                                        : Colors.blue[100]),
-                                Icon(Icons.star,
-                                    size: 15,
-                                    color: (widget.dificuldade >= 4)
-                                        ? Colors.blue
-                                        : Colors.blue[100]),
-                                Icon(Icons.star,
-                                    size: 15,
-                                    color: (widget.dificuldade >= 5)
-                                        ? Colors.blue
-                                        : Colors.blue[100]),
-                              ],
-                            ),
+                            Difficulty(difficultyLevel: widget.dificuldade),
                           ],
                         ),
                         Container(
