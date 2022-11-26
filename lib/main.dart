@@ -24,7 +24,6 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Scaffold(
         //estrutura pronta de layout
-
         appBar: AppBar(
             leading: Container(color: Colors.black26), title: Text('Tarefas')),
         body: AnimatedOpacity(
