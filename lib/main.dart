@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:nosso_primeiro_projeto/screens/initial_screen.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,12 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-        Container(color: Colors.red, width: 100, height: 100,),
-        Container(color: Colors.blue, width: 50, height: 50)
-      ]),
+      home: const InitialScreen(),
     );
   }
 }
