@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flutter_app/components/task.dart';
+import 'package:task_flutter_app/screens/form_screen.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({Key? key}) : super(key: key);
@@ -9,8 +10,6 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
-  bool opacidade = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,32 +17,29 @@ class _InitialScreenState extends State<InitialScreen> {
       appBar: AppBar(
           leading: Container(color: Colors.black26),
           title: const Text('Tarefas')),
-      body: AnimatedOpacity(
-        opacity: opacidade ? 1 : 0,
-        duration: const Duration(milliseconds: 800),
-        child: ListView(
-          children: const [
-            Task('Aprender Flutter', 'assets/images/flutter.png', 3),
-            Task('Andar de Bike', 'assets/images/bike.jpg', 2),
-            Task('Meditar na praia enquanto ouve as ondas do mar',
-                'assets/images/meditation.jpeg', 5),
-            Task('Ler', 'assets/images/book.jpg', 4),
-            Task('Jogar', 'assets/images/playgame.jpg', 0),
-            SizedBox(
-              height: 80,
-            ),
-          ],
-        ),
+      body: ListView(
+        children: const [
+          Task('Aprender Flutter', 'assets/images/flutter.png', 3),
+          Task('Andar de Bike', 'assets/images/bike.jpg', 2),
+          Task('Meditar na praia enquanto ouve as ondas do mar',
+              'assets/images/meditation.jpeg', 5),
+          Task('Ler', 'assets/images/book.jpg', 4),
+          Task('Jogar', 'assets/images/playgame.jpg', 0),
+          SizedBox(
+            height: 80,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            setState(() {
-              {
-                opacidade = !opacidade;
-              }
-            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FormScreen(),
+              ),
+            );
           },
-          child: const Icon(Icons.remove_red_eye)),
+          child: const Icon(Icons.add)),
     );
   }
 }
