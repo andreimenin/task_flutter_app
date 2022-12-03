@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_flutter_app/components/task.dart';
 import 'package:task_flutter_app/data/task_inherited.dart';
 import 'package:task_flutter_app/screens/form_screen.dart';
 
@@ -20,6 +19,7 @@ class _InitialScreenState extends State<InitialScreen> {
           title: const Text('Tarefas')),
       body: ListView(
         children: TaskInherited.of(context).taskList,
+        padding: EdgeInsets.only(top: 8, bottom: 70),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
