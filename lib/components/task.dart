@@ -6,15 +6,15 @@ class Task extends StatefulWidget {
   final String foto;
   final int dificuldade;
 
-  const Task(this.nome, this.foto, this.dificuldade, {Key? key})
+  Task(this.nome, this.foto, this.dificuldade, {Key? key})
       : super(key: key);
 
+  int nivel = 0;
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  int nivel = 0;
 
   // Identificando se a imagem será asset ou tipo network se conter 'http' na url
   bool assetOrNetwork() {
@@ -89,7 +89,7 @@ class _TaskState extends State<Task> {
                             onPressed: () {
                               setState(() {
                                 //observando o valor da variavel nivel para re-renderizar a tela
-                                nivel++;
+                                widget.nivel++;
                               });
                               // print(nivel);
                             },
@@ -117,14 +117,14 @@ class _TaskState extends State<Task> {
                       child: LinearProgressIndicator(
                           color: Colors.white,
                           value: (widget.dificuldade > 0)
-                              ? (nivel / widget.dificuldade)
+                              ? (widget.nivel / widget.dificuldade)
                               : 1),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Text(
-                      'Nível: $nivel',
+                      'Nível: ${widget.nivel}',
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
