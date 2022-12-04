@@ -20,18 +20,31 @@ class TaskDao {
     print('Iniciando o save: ');
     final Database bancoDeDados = await getDatabase();
     var itemExists = await find(tarefa.nome);
+    Map<String, dynamic> taskMap = toMap(tarefa);
     if (itemExists.isEmpty) {
       print('a tarefa não existia.');
-      return await bancoDeDados.insert(_tablename, values);
+      return await bancoDeDados.insert(_tablename, taskMap);
     } else {
       print('A Tarefa já existia!');
       return await bancoDeDados.update(
         _tablename,
-        values,
+        taskMap,
         where: '$_name = ?',
         whereArgs: [tarefa.nome],
       );
     }
+  }
+
+  //método que converte uma Tarefa em um Map
+  Map<String, dynamic> toMap(Task tarefa) {
+    print('Convertendo Tarefa em Map: ');
+    final Map<String, dynamic> mapDeTarefas = Map();
+    mapDeTarefas[_name] = tarefa.nome;
+    mapDeTarefas[_difficulty] = tarefa.dificuldade;
+    mapDeTarefas[_image] = tarefa.foto;
+    print('Mapa de Tarefas: $mapDeTarefas');
+
+    return mapDeTarefas;
   }
 
   //função de read (listagem)
