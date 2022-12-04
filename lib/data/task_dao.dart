@@ -15,7 +15,24 @@ class TaskDao {
   static String _difficulty = 'difficulty';
   static String _image = 'image';
 
-  save(Task tarefa) async {}
+  //método para salvar ou atualizar uma Task (tarefa)
+  save(Task tarefa) async {
+    print('Iniciando o save: ');
+    final Database bancoDeDados = await getDatabase();
+    var itemExists = await find(tarefa.nome);
+    if (itemExists.isEmpty) {
+      print('a tarefa não existia.');
+      return await bancoDeDados.insert(_tablename, values);
+    } else {
+      print('A Tarefa já existia!');
+      return await bancoDeDados.update(
+        _tablename,
+        values,
+        where: '$_name = ?',
+        whereArgs: [tarefa.nome],
+      );
+    }
+  }
 
   //função de read (listagem)
   Future<List<Task>> findAll() async {
