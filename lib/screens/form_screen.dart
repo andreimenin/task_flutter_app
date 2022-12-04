@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:task_flutter_app/components/task.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 import 'package:task_flutter_app/data/task_inherited.dart';
@@ -28,8 +29,12 @@ class _FormScreenState extends State<FormScreen> {
   }
 
   bool difficultyValidator(String? value) {
-    if (value != null && value.isEmpty) {
-      if (int.parse(value) > 5 || int.parse(value) < 0) {
+    if (value == null || value.isEmpty) {
+      return true;
+    }
+    else{
+      final onlyNumber = value.replaceAll(RegExp('[^0-9]'), '');
+      if((onlyNumber.isEmpty) || ((int.parse(onlyNumber) > 5 || int.parse(onlyNumber) < 0))){
         return true;
       }
     }
@@ -89,6 +94,9 @@ class _FormScreenState extends State<FormScreen> {
                         keyboardType: TextInputType.number,
                         controller: difficultyController,
                         textAlign: TextAlign.center,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: 'Dificuldade',
