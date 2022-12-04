@@ -27,15 +27,25 @@ class _InitialScreenState extends State<InitialScreen> {
               //identificando os estados da conexão
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
-                  // TODO: Handle this case.
+                  return Center(
+                      child: Column(
+                    children: [CircularProgressIndicator(), Text('Sem conexão')],
+                  ));
                   break;
                 case ConnectionState.waiting:
-                  // TODO: Handle this case.
+                  return Center(
+                      child: Column(
+                        children: [CircularProgressIndicator(), Text('Aguardando conexão')],
+                      ));
                   break;
                 case ConnectionState.active:
-                  // TODO: Handle this case.
+                  return Center(
+                      child: Column(
+                        children: [CircularProgressIndicator(), Text('Conexão ativa')],
+                      ));
                   break;
-                case ConnectionState.done://requisição finalizada - retornando a listagem de Tasks do banco de dados
+                case ConnectionState
+                    .done: //requisição finalizada - retornando a listagem de Tasks do banco de dados
                   if (snapshot.hasData && items != null) {
                     if (items.isNotEmpty) {
                       return ListView.builder(
@@ -45,9 +55,20 @@ class _InitialScreenState extends State<InitialScreen> {
                             return tarefa;
                           });
                     }
+                    return Center(
+                      child: Column(
+                        children: [
+                          Icon(Icons.error_outline, size: 128),
+                          Text('Não há nenhuma Tarefa',
+                              style: TextStyle(fontSize: 32))
+                        ],
+                      ),
+                    );
                   }
+                  return Text('Erro ao carregar Tarefas ');
                   break;
               }
+              return Text('Erro desconhecido');
             }),
       ),
       floatingActionButton: FloatingActionButton(
