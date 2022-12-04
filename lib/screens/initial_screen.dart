@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_flutter_app/data/task_inherited.dart';
+import 'package:task_flutter_app/components/task.dart';
+import 'package:task_flutter_app/data/task_dao.dart';
 import 'package:task_flutter_app/screens/form_screen.dart';
 
 class InitialScreen extends StatefulWidget {
@@ -17,9 +18,19 @@ class _InitialScreenState extends State<InitialScreen> {
       appBar: AppBar(
           leading: Container(color: Colors.black26),
           title: const Text('Tarefas')),
-      body: ListView(
-        children: TaskInherited.of(context).taskList,
+      body: Padding(
         padding: EdgeInsets.only(top: 8, bottom: 70),
+        child: FutureBuilder<List<Task>>(
+            future: TaskDao().findAll(),
+            builder: (context, snapshot) {
+              List<Task>? items = snapshot.data;
+              return ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Task tarefa = items[index];
+                    return tarefa;
+                  });
+            }),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
