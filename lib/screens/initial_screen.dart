@@ -17,6 +17,13 @@ class _InitialScreenState extends State<InitialScreen> {
       //estrutura pronta de layout
       appBar: AppBar(
           leading: Container(color: Colors.black26),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                icon: Icon(Icons.refresh))
+          ],
           title: const Text('Tarefas')),
       body: Padding(
         padding: EdgeInsets.only(top: 8, bottom: 70),
@@ -90,6 +97,7 @@ class _InitialScreenState extends State<InitialScreen> {
                 ),
               ),
             ).then((value) => setState(() {
+                  //passando um setState para indicar para a tela fazer um rebuild ao adicionar uma nova tarefa no banco de dados
                   print('Recarregando a tela inicial');
                 }));
           },

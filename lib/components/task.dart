@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:task_flutter_app/components/difficulty.dart';
+import 'package:task_flutter_app/data/task_dao.dart';
 
 class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
 
-  Task(this.nome, this.foto, this.dificuldade, {Key? key})
-      : super(key: key);
+  Task(this.nome, this.foto, this.dificuldade, {Key? key}) : super(key: key);
 
   int nivel = 0;
+
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-
   // Identificando se a imagem será asset ou tipo network se conter 'http' na url
   bool assetOrNetwork() {
     if (widget.foto.contains('http')) {
@@ -86,6 +86,9 @@ class _TaskState extends State<Task> {
                         height: 52,
                         width: 52,
                         child: ElevatedButton(
+                            onLongPress: () {
+                              TaskDao().delete(widget.nome);
+                            },
                             onPressed: () {
                               setState(() {
                                 //observando o valor da variavel nivel para re-renderizar a tela
