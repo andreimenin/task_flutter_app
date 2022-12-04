@@ -29,20 +29,29 @@ class _InitialScreenState extends State<InitialScreen> {
                 case ConnectionState.none:
                   return Center(
                       child: Column(
-                    children: [CircularProgressIndicator(), Text('Sem conexão')],
+                    children: [
+                      CircularProgressIndicator(),
+                      Text('Sem conexão')
+                    ],
                   ));
                   break;
                 case ConnectionState.waiting:
                   return Center(
                       child: Column(
-                        children: [CircularProgressIndicator(), Text('Aguardando conexão')],
-                      ));
+                    children: [
+                      CircularProgressIndicator(),
+                      Text('Aguardando conexão')
+                    ],
+                  ));
                   break;
                 case ConnectionState.active:
                   return Center(
                       child: Column(
-                        children: [CircularProgressIndicator(), Text('Conexão ativa')],
-                      ));
+                    children: [
+                      CircularProgressIndicator(),
+                      Text('Conexão ativa')
+                    ],
+                  ));
                   break;
                 case ConnectionState
                     .done: //requisição finalizada - retornando a listagem de Tasks do banco de dados
@@ -80,7 +89,9 @@ class _InitialScreenState extends State<InitialScreen> {
                   taskContext: context,
                 ),
               ),
-            );
+            ).then((value) => setState(() {
+                  print('Recarregando a tela inicial');
+                }));
           },
           child: const Icon(Icons.add)),
     );
