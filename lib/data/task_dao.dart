@@ -16,6 +16,7 @@ class TaskDao {
   static String _image = 'image';
 
   save(Task tarefa) async {}
+
   //função de read (listagem)
   Future<List<Task>> findAll() async {
     //Future utilizado para chamar requisições de carregamento de dados
@@ -23,8 +24,20 @@ class TaskDao {
     final Database bancoDeDados = await getDatabase(); //o await significa que irá esperar fazer a requisição da função Future
     final List<Map<String, dynamic>> result = await bancoDeDados.query(_tablename);
     print('Procurando dados no banco de dados... encontrado: $result');
-    return toList();
+    return toList(result);
   }
+  //função utilizada para transformar a lista de map em uma lista de Task
+  List<Task> toList(List<Map<String, dynamic>> mapDeTarefas){
+    print('Convertendo to List:');
+    final List<Task> tarefas = [];
+    for (Map<String, dynamic> linha in mapDeTarefas){
+      final Task tarefa = Task(linha[_name], linha[_image], linha[_difficulty]);
+      tarefas.add(tarefa);
+    }
+    print('Lista de Tarefas $tarefas');
+    return tarefas;
+  }
+
   Future<List<Task>> find(String nomeDaTarefa) async {}
   delete(String nomeDaTarefa) async {}
 }
