@@ -11,9 +11,11 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       //estrutura pronta de layout
       appBar: AppBar(
           leading: Container(color: Colors.black26),
@@ -22,11 +24,11 @@ class _InitialScreenState extends State<InitialScreen> {
                 onPressed: () {
                   setState(() {});
                 },
-                icon: Icon(Icons.refresh))
+                icon: const Icon(Icons.refresh))
           ],
           title: const Text('Tarefas')),
       body: Padding(
-        padding: EdgeInsets.only(top: 8, bottom: 70),
+        padding: const EdgeInsets.only(top: 8, bottom: 70),
         child: FutureBuilder<List<Task>>(
             future: TaskDao().findAll(),
             builder: (context, snapshot) {
@@ -36,7 +38,7 @@ class _InitialScreenState extends State<InitialScreen> {
                 case ConnectionState.none:
                   return Center(
                       child: Column(
-                    children: [
+                    children: const [
                       CircularProgressIndicator(),
                       Text('Sem conexão')
                     ],
@@ -54,7 +56,7 @@ class _InitialScreenState extends State<InitialScreen> {
                 case ConnectionState.active:
                   return Center(
                       child: Column(
-                    children: [
+                    children: const [
                       CircularProgressIndicator(),
                       Text('Conexão ativa')
                     ],
@@ -73,7 +75,7 @@ class _InitialScreenState extends State<InitialScreen> {
                     }
                     return Center(
                       child: Column(
-                        children: [
+                        children: const [
                           Icon(Icons.error_outline, size: 128),
                           Text('Não há nenhuma Tarefa',
                               style: TextStyle(fontSize: 32))

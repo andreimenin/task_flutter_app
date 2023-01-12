@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flutter_app/components/task.dart';
-
+//Dados estáticos para serem exibidos na tela
 class TaskInherited extends InheritedWidget {
   TaskInherited({
     Key? key,
