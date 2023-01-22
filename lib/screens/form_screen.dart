@@ -155,10 +155,12 @@ class _FormScreenState extends State<FormScreen> {
                         // print(nameController.text);
                         // print(difficultyController.text);
                         // print(imageController.text);
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         await TaskDao().save(Task(
                             nameController.text,
                             imageController.text,
-                            int.parse(difficultyController.text))
+                            int.parse(difficultyController.text),
+                            0)
                             );
                         // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(

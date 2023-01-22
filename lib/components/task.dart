@@ -8,11 +8,10 @@ class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
+  int nivel;
   late Function? functionUpdate;
 
-  Task(this.nome, this.foto, this.dificuldade, {this.functionUpdate});
-
-  int nivel = 0;
+  Task(this.nome, this.foto, this.dificuldade, this.nivel, {this.functionUpdate});
 
   @override
   State<Task> createState() => _TaskState();
@@ -62,8 +61,8 @@ class _TaskState extends State<Task> {
                           borderRadius: BorderRadius.circular(6),
                           child: assetOrNetwork()
                               ? Image.asset(
-                                  widget.foto,
-                                  fit: BoxFit.cover,
+                                  'assets/images/nophoto.png',
+                                  fit: BoxFit.fitWidth,
                                 )
                               : Image.network(
                                   widget.foto,
@@ -104,11 +103,23 @@ class _TaskState extends State<Task> {
                                 ),
                               );
                             },
-                            onPressed: () {
-                              setState(() {
+                            onPressed: () async {
+                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                await TaskDao().update(Task(widget.nome,
+                                    widget.foto,
+                                    widget.dificuldade,
+                                    widget.nivel+1)
+                                );
+                                // ignore: use_build_context_synchronously
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Nível atualizado'),
+                                  ),
+                                );
                                 //observando o valor da variavel nivel para re-renderizar a tela
-                                widget.nivel++;
-                              });
+                                setState(() {
+                                  widget.nivel++;
+                                });
                               // print(nivel);
                             },
                             child: Column(
