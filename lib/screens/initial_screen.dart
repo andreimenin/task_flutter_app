@@ -20,12 +20,12 @@ class _InitialScreenState extends State<InitialScreen> {
       //estrutura pronta de layout
       appBar: AppBar(
           leading: Container(color: Colors.black26),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                icon: const Icon(Icons.refresh))
+          actions: const [
+            // IconButton(
+            //     onPressed: () {
+            //       setState(() {});
+            //     },
+            //     icon: const Icon(Icons.refresh))
           ],
           title: const Text('Tarefas')),
       body: Padding(
@@ -48,7 +48,7 @@ class _InitialScreenState extends State<InitialScreen> {
                 case ConnectionState.waiting:
                   return Center(
                       child: Column(
-                    children: [
+                    children: const [
                       CircularProgressIndicator(),
                       Text('Aguardando conexão')
                     ],
