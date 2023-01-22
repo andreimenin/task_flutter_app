@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_flutter_app/components/backdrop/custom_backdrop/confirm_backdrop.dart';
+import 'package:task_flutter_app/components/backdrop/custom_backdrop/custom_backdrop.dart';
 import 'package:task_flutter_app/components/difficulty.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 
@@ -6,8 +8,9 @@ class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
+  late Function? functionUpdate;
 
-  Task(this.nome, this.foto, this.dificuldade, {Key? key}) : super(key: key);
+  Task(this.nome, this.foto, this.dificuldade, {this.functionUpdate});
 
   int nivel = 0;
 
@@ -16,6 +19,7 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
+  CustomBackdrop _customBackdrop = CustomBackdrop();
   // Identificando se a imagem será asset ou tipo network se conter 'http' na url
   bool assetOrNetwork() {
     if (widget.foto.contains('http')) {
@@ -87,7 +91,18 @@ class _TaskState extends State<Task> {
                         width: 52,
                         child: ElevatedButton(
                             onLongPress: () {
-                              TaskDao().delete(widget.nome);
+                              _customBackdrop.bottomSheet(context,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ConfirmBackdrop(code: widget.nome, idAppointment: widget.dificuldade, confirm: (){
+                                      TaskDao().delete(widget.nome);
+                                      widget.functionUpdate!();
+                                    },),
+                                  ],
+                                ),
+                              );
                             },
                             onPressed: () {
                               setState(() {
