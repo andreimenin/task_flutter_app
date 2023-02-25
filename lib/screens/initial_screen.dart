@@ -12,6 +12,7 @@ class InitialScreen extends StatefulWidget {
 
 class _InitialScreenState extends State<InitialScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,12 +20,12 @@ class _InitialScreenState extends State<InitialScreen> {
       //estrutura pronta de layout
       appBar: AppBar(
           leading: Container(color: Colors.black26),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                icon: const Icon(Icons.refresh))
+          actions: const [
+            // IconButton(
+            //     onPressed: () {
+            //       setState(() {});
+            //     },
+            //     icon: const Icon(Icons.refresh))
           ],
           title: const Text('Tarefas')),
       body: Padding(
@@ -47,7 +48,7 @@ class _InitialScreenState extends State<InitialScreen> {
                 case ConnectionState.waiting:
                   return Center(
                       child: Column(
-                    children: [
+                    children: const [
                       CircularProgressIndicator(),
                       Text('Aguardando conexão')
                     ],
@@ -70,24 +71,30 @@ class _InitialScreenState extends State<InitialScreen> {
                           itemCount: items.length,
                           itemBuilder: (BuildContext context, int index) {
                             final Task tarefa = items[index];
+                            tarefa.functionUpdate = (){
+                              setState(() {
+                                items.removeAt(index);
+                                });
+                              };
                             return tarefa;
                           });
-                    }
-                    return Center(
-                      child: Column(
-                        children: const [
-                          Icon(Icons.error_outline, size: 128),
-                          Text('Não há nenhuma Tarefa',
-                              style: TextStyle(fontSize: 32))
-                        ],
-                      ),
-                    );
                   }
-                  return Text('Erro ao carregar Tarefas ');
-                  break;
-              }
-              return Text('Erro desconhecido');
-            }),
+                   return
+                   Center(
+                     child: Column(
+                       children: const [
+                         Icon(Icons.error_outline, size: 128),
+                         Text('Não há nenhuma Tarefa',
+                             style: TextStyle(fontSize: 32))
+                       ],
+                     ),
+                   );
+                 }
+                 return Text('Erro ao carregar Tarefas ');
+                 break;
+             }
+             return Text('Erro desconhecido');
+           }),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
