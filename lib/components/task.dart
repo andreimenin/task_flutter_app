@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_flutter_app/components/backdrop/custom_backdrop/confirm_backdrop.dart';
+import 'package:task_flutter_app/components/backdrop/custom_backdrop/custom_backdrop.dart';
 import 'package:task_flutter_app/components/difficulty.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 
@@ -6,16 +8,17 @@ class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
+  int nivel;
+  late Function? functionUpdate;
 
-  Task(this.nome, this.foto, this.dificuldade, {Key? key}) : super(key: key);
-
-  int nivel = 0;
+  Task(this.nome, this.foto, this.dificuldade, this.nivel, {this.functionUpdate});
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
+  CustomBackdrop _customBackdrop = CustomBackdrop();
   // Identificando se a imagem será asset ou tipo network se conter 'http' na url
   bool assetOrNetwork() {
     if (widget.foto.contains('http')) {
@@ -58,8 +61,8 @@ class _TaskState extends State<Task> {
                           borderRadius: BorderRadius.circular(6),
                           child: assetOrNetwork()
                               ? Image.asset(
-                                  widget.foto,
-                                  fit: BoxFit.cover,
+                                  'assets/images/nophoto.png',
+                                  fit: BoxFit.fitWidth,
                                 )
                               : Image.network(
                                   widget.foto,
@@ -87,13 +90,36 @@ class _TaskState extends State<Task> {
                         width: 52,
                         child: ElevatedButton(
                             onLongPress: () {
-                              TaskDao().delete(widget.nome);
+                              _customBackdrop.bottomSheet(context,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ConfirmBackdrop(code: widget.nome, idAppointment: widget.dificuldade, confirm: (){
+                                      TaskDao().delete(widget.nome);
+                                      widget.functionUpdate!();
+                                    },),
+                                  ],
+                                ),
+                              );
                             },
-                            onPressed: () {
-                              setState(() {
+                            onPressed: () async {
+                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                await TaskDao().update(Task(widget.nome,
+                                    widget.foto,
+                                    widget.dificuldade,
+                                    widget.nivel+1)
+                                );
+                                // ignore: use_build_context_synchronously
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Nível atualizado'),
+                                  ),
+                                );
                                 //observando o valor da variavel nivel para re-renderizar a tela
-                                widget.nivel++;
-                              });
+                                setState(() {
+                                  widget.nivel++;
+                                });
                               // print(nivel);
                             },
                             child: Column(
