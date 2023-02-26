@@ -29,140 +29,140 @@ class _TaskState extends State<Task> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: Colors.blue,
-              ),
-              height: 140),
-          Column(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: Colors.white,
-                ),
-                height: 100,
-                child: Row(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                    color: Colors.blue,
+                  ),
+                  child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: Colors.white,
+                    ),
+                    //height: 100,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: Colors.black26,
+                            ),
+                            width: 72,
+                            height: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: assetOrNetwork()
+                                  ? Image.asset(
+                                      'assets/images/nophoto.png',
+                                      fit: BoxFit.fitWidth,
+                                    )
+                                  : Image.network(
+                                      widget.foto,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.nome,
+                                    style: const TextStyle(
+                                        fontSize: 24,
+                                        //overflow: TextOverflow.ellipsis
+                                        ),
+                                  ),
+                                  Difficulty(difficultyLevel: widget.dificuldade),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 52,
+                            width: 52,
+                            child: ElevatedButton(
+                                onLongPress: () {
+                                  if(widget.functionUpdate!=null){
+                                    widget.functionUpdate!();
+                                    }
+                                },
+                                onPressed: () async {
+                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                    await TaskDao().update(Task(widget.nome,
+                                        widget.foto,
+                                        widget.dificuldade,
+                                        widget.nivel+1)
+                                    );
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Nível atualizado'),
+                                      ),
+                                    );
+                                    //observando o valor da variavel nivel para re-renderizar a tela
+                                    setState(() {
+                                      widget.nivel++;
+                                    });
+                                  // print(nivel);
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: const [
+                                    Icon(Icons.arrow_drop_up),
+                                    Text(
+                                      'UP',
+                                      style: TextStyle(fontSize: 12),
+                                    )
+                                  ],
+                                )),
+                          )
+                        ]),
+                  ),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: Colors.black26,
-                        ),
-                        width: 72,
-                        height: 100,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: assetOrNetwork()
-                              ? Image.asset(
-                                  'assets/images/nophoto.png',
-                                  fit: BoxFit.fitWidth,
-                                )
-                              : Image.network(
-                                  widget.foto,
-                                  fit: BoxFit.cover,
-                                ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: SizedBox(
+                          width: 200,
+                          child: LinearProgressIndicator(
+                              color: Colors.white,
+                              value: (widget.dificuldade > 0)
+                                  ? (widget.nivel / widget.dificuldade)
+                                  : 1),
                         ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 200,
-                              child: Text(
-                                widget.nome,
-                                style: const TextStyle(
-                                    fontSize: 24,
-                                    overflow: TextOverflow.ellipsis),
-                              )),
-                          Difficulty(difficultyLevel: widget.dificuldade),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Text(
+                          'Nível: ${widget.nivel}',
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
-                      SizedBox(
-                        height: 52,
-                        width: 52,
-                        child: ElevatedButton(
-                            onLongPress: () {
-                              _customBackdrop.bottomSheet(context,
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ConfirmBackdrop(code: widget.nome, idAppointment: widget.dificuldade, confirm: (){
-                                      TaskDao().delete(widget.nome);
-                                      widget.functionUpdate!();
-                                    },),
-                                  ],
-                                ),
-                              );
-                            },
-                            onPressed: () async {
-                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                await TaskDao().update(Task(widget.nome,
-                                    widget.foto,
-                                    widget.dificuldade,
-                                    widget.nivel+1)
-                                );
-                                // ignore: use_build_context_synchronously
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Nível atualizado'),
-                                  ),
-                                );
-                                //observando o valor da variavel nivel para re-renderizar a tela
-                                setState(() {
-                                  widget.nivel++;
-                                });
-                              // print(nivel);
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: const [
-                                Icon(Icons.arrow_drop_up),
-                                Text(
-                                  'UP',
-                                  style: TextStyle(fontSize: 12),
-                                )
-                              ],
-                            )),
-                      )
-                    ]),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: SizedBox(
-                      width: 200,
-                      child: LinearProgressIndicator(
-                          color: Colors.white,
-                          value: (widget.dificuldade > 0)
-                              ? (widget.nivel / widget.dificuldade)
-                              : 1),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Text(
-                      'Nível: ${widget.nivel}',
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
+                    ],
+                  )
                 ],
-              )
+              ),
+                  ),
+              
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

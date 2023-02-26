@@ -9,39 +9,56 @@ class CustomBackdrop {
   * @return void
   */
   double defaultBorderRadius = 8.0;
-  void bottomSheet(BuildContext context, Widget customdata,
+  void bottomSheet(BuildContext contextParent, Widget customdata,
       {bool showPan = true}) {
     Future<void> bottomSheetAwaitClose = showModalBottomSheet<void>(
-        isScrollControlled: false,
+        enableDrag: true,
+        isDismissible: true,
+        useRootNavigator: true,
+        isScrollControlled: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(defaultBorderRadius),
+          borderRadius:
+          BorderRadius.only(
+            topLeft: Radius.circular(defaultBorderRadius),
+            topRight: Radius.circular(defaultBorderRadius),
+          ),
         ),
-        context: context,
-        builder: (BuildContext context) => 
-        Wrap(
-          children: [
-            Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(24.0),
-                    topLeft: Radius.circular(24.0),
-                  ),
-                ),
-                // height: MediaQuery.of(context).size.height * 0.81,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      showPan ? botomSheetPan() : const SizedBox(),
-                      customdata,
-                      const SizedBox(
-                        //height: 40,
-                      ),
-                    ],
-                  ),
-                ))
-          ],
+        context: contextParent,
+        builder: (BuildContext context) => ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(contextParent).size.height - MediaQuery.of(contextParent).viewPadding.top,
+          ),
+          child: Padding(
+                padding: EdgeInsets.only(
+              bottom: MediaQuery.of(contextParent).viewInsets.bottom),
+                child: 
+                    Stack(
+                      children: [
+                        SizedBox(
+                          height: 30.0,
+                          child: showPan ? botomSheetPan() : const SizedBox(),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: SingleChildScrollView(
+                                    child: Wrap(
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            customdata,
+                                            const SizedBox(
+                                              height: 40,
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )],
+                    )
+                          ,
+              ),
         ));
 
     bottomSheetAwaitClose.then((void value) => {});

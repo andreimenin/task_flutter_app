@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:task_flutter_app/components/task.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 import 'package:task_flutter_app/screens/form_screen.dart';
 
+import '../components/backdrop/custom_backdrop/confirm_backdrop.dart';
+import '../components/backdrop/custom_backdrop/custom_backdrop.dart';
+
 class InitialScreen extends StatefulWidget {
+  static String routeName = "/initial_screen";
   const InitialScreen({Key? key}) : super(key: key);
 
   @override
@@ -12,9 +17,10 @@ class InitialScreen extends StatefulWidget {
 
 class _InitialScreenState extends State<InitialScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final CustomBackdrop _customBackdrop = CustomBackdrop();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext contextScaffold) {
     return Scaffold(
       key: _scaffoldKey,
       //estrutura pronta de layout
@@ -72,10 +78,16 @@ class _InitialScreenState extends State<InitialScreen> {
                           itemBuilder: (BuildContext context, int index) {
                             final Task tarefa = items[index];
                             tarefa.functionUpdate = (){
-                              setState(() {
-                                items.removeAt(index);
-                                });
-                              };
+                              _customBackdrop.bottomSheet(contextScaffold,
+                                ConfirmBackdrop(code: tarefa.nome, confirm: (){
+                                  TaskDao().delete(tarefa.nome);
+                                  setState(() {
+                                  items.removeAt(index);
+                                  });
+                                },),
+                                showPan: true
+                              );
+                            };
                             return tarefa;
                           });
                   }
@@ -100,7 +112,7 @@ class _InitialScreenState extends State<InitialScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
+              MaterialWithModalsPageRoute(
                 builder: (contextNew) => FormScreen(
                   taskContext: context,
                 ),
