@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:task_flutter_app/components/backdrop/custom_backdrop/confirm_backdrop.dart';
 import 'package:task_flutter_app/components/backdrop/custom_backdrop/custom_backdrop.dart';
+import 'package:task_flutter_app/components/button/button_outline.dart';
 import 'package:task_flutter_app/components/difficulty.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 
@@ -10,6 +12,7 @@ class Task extends StatefulWidget {
   final int dificuldade;
   int nivel;
   late Function? functionUpdate;
+  late Function? functionRemove;
 
   Task(this.nome, this.foto, this.dificuldade, this.nivel, {this.functionUpdate});
 
@@ -48,89 +51,145 @@ class _TaskState extends State<Task> {
                       color: Colors.white,
                     ),
                     //height: 100,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              color: Colors.black26,
+                    child: IntrinsicHeight(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: Colors.black26,
+                              ),
+                              width: 72,
+                              height: 100,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: assetOrNetwork()
+                                    ? Image.asset(
+                                        'assets/images/nophoto.png',
+                                        fit: BoxFit.fitWidth,
+                                      )
+                                    : Image.network(
+                                        widget.foto,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
                             ),
-                            width: 72,
-                            height: 100,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(6),
-                              child: assetOrNetwork()
-                                  ? Image.asset(
-                                      'assets/images/nophoto.png',
-                                      fit: BoxFit.fitWidth,
-                                    )
-                                  : Image.network(
-                                      widget.foto,
-                                      fit: BoxFit.cover,
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.nome,
+                                      style: const TextStyle(
+                                          fontSize: 24,
+                                          //overflow: TextOverflow.ellipsis
+                                          ),
                                     ),
+                                    Difficulty(difficultyLevel: widget.dificuldade),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
+                            Padding(
+                              padding: EdgeInsets.all(8),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    widget.nome,
-                                    style: const TextStyle(
-                                        fontSize: 24,
-                                        //overflow: TextOverflow.ellipsis
+                                  Material(
+                                    type: MaterialType.transparency,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.blue, width: 1.0),
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: Colors.white,
+                                      ),
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(6.0),
+                                        onTap: () {
+                                        if(widget.functionRemove!=null){
+                                          widget.functionRemove!();
+                                          }
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(3.0),
+                                          child: Icon(PhosphorIcons.trash, color: Colors.blue),
                                         ),
+                                      ),
+                                    ),
                                   ),
-                                  Difficulty(difficultyLevel: widget.dificuldade),
+                                  Material(
+                                    type: MaterialType.transparency,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.blue, width: 1.0),
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: Colors.white,
+                                      ),
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(6.0),
+                                        onTap: () {
+                                        if(widget.functionUpdate!=null){
+                                          widget.functionUpdate!();
+                                        }
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(3.0),
+                                          child: Icon(PhosphorIcons.pencil, color: Colors.blue),
+                                        ),
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 52,
-                            width: 52,
-                            child: ElevatedButton(
-                                onLongPress: () {
-                                  if(widget.functionUpdate!=null){
-                                    widget.functionUpdate!();
-                                    }
-                                },
-                                onPressed: () async {
-                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                    await TaskDao().update(Task(widget.nome,
-                                        widget.foto,
-                                        widget.dificuldade,
-                                        widget.nivel+1)
-                                    );
-                                    // ignore: use_build_context_synchronously
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Nível atualizado'),
-                                      ),
-                                    );
-                                    //observando o valor da variavel nivel para re-renderizar a tela
-                                    setState(() {
-                                      widget.nivel++;
-                                    });
-                                  // print(nivel);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: const [
-                                    Icon(Icons.arrow_drop_up),
-                                    Text(
-                                      'UP',
-                                      style: TextStyle(fontSize: 12),
-                                    )
-                                  ],
-                                )),
-                          )
-                        ]),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: SizedBox(
+                                height: 45,
+                                width: 52,
+                                child: ElevatedButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size.zero, // Set this
+                                      padding: EdgeInsets.zero, // and this
+                                    ),
+                                    onPressed: () async {
+                                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                        await TaskDao().update(Task(widget.nome,
+                                            widget.foto,
+                                            widget.dificuldade,
+                                            widget.nivel+1)
+                                        );
+                                        // ignore: use_build_context_synchronously
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Nível atualizado'),
+                                          ),
+                                        );
+                                        //observando o valor da variavel nivel para re-renderizar a tela
+                                        setState(() {
+                                          widget.nivel++;
+                                        });
+                                      // print(nivel);
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: const [
+                                        Icon(PhosphorIcons.arrow_fat_up_fill, size: 20,),
+                                        Text(
+                                          'UP',
+                                          style: TextStyle(fontSize: 12),
+                                        )
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,8 +216,7 @@ class _TaskState extends State<Task> {
                   )
                 ],
               ),
-                  ),
-              
+            ),
             ],
           ),
         ),

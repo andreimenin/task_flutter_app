@@ -77,7 +77,7 @@ class _InitialScreenState extends State<InitialScreen> {
                           itemCount: items.length,
                           itemBuilder: (BuildContext context, int index) {
                             final Task tarefa = items[index];
-                            tarefa.functionUpdate = (){
+                            tarefa.functionRemove = (){
                               _customBackdrop.bottomSheet(contextScaffold,
                                 ConfirmBackdrop(code: tarefa.nome, confirm: (){
                                   TaskDao().delete(tarefa.nome);
@@ -88,6 +88,20 @@ class _InitialScreenState extends State<InitialScreen> {
                                 showPan: true
                               );
                             };
+                            tarefa.functionUpdate = () {
+                                Navigator.push(
+                                  context,
+                                  MaterialWithModalsPageRoute(
+                                    builder: (contextNew) => FormScreen(
+                                      taskContext: context,
+                                      task: tarefa
+                                    ),
+                                  ),
+                                ).then((value) => setState(() {
+                                      //passando um setState para indicar para a tela fazer um rebuild ao adicionar uma nova tarefa no banco de dados
+                                      print('Recarregando a tela inicial');
+                                    }));
+                              };
                             return tarefa;
                           });
                   }

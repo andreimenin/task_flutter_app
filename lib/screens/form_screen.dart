@@ -4,9 +4,10 @@ import 'package:task_flutter_app/components/task.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 
 class FormScreen extends StatefulWidget {
-  const FormScreen({Key? key, required this.taskContext}) : super(key: key);
+  const FormScreen({Key? key, required this.taskContext, this.task}) : super(key: key);
 
   final BuildContext taskContext;
+  final Task? task;
 
   @override
   State<FormScreen> createState() => _FormScreenState();
@@ -36,6 +37,17 @@ class _FormScreenState extends State<FormScreen> {
       }
     }
     return false;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(widget.task != null){
+      nameController.text = widget.task!.nome;
+      difficultyController.text = widget.task!.dificuldade.toString();
+      imageController.text = widget.task!.foto;
+    }
+    super.initState();
   }
 
   @override
