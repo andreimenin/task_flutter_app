@@ -172,7 +172,7 @@ class _FormScreenState extends State<FormScreen> {
                             nameController.text,
                             imageController.text,
                             int.parse(difficultyController.text),
-                            0)
+                            widget.task != null ? widget.task!.nivel : 0)
                             );
                         // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
