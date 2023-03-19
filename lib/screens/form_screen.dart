@@ -17,6 +17,7 @@ class _FormScreenState extends State<FormScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController difficultyController = TextEditingController();
   TextEditingController imageController = TextEditingController();
+  final Stopwatch _stopwatch = Stopwatch();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -47,6 +48,7 @@ class _FormScreenState extends State<FormScreen> {
       difficultyController.text = widget.task!.dificuldade.toString();
       imageController.text = widget.task!.foto;
     }
+    _stopwatch.start();
     super.initState();
   }
 
@@ -155,7 +157,23 @@ class _FormScreenState extends State<FormScreen> {
                         imageController.text,
                         errorBuilder: (BuildContext context, Object exception,
                             StackTrace? stackTrace) {
-                          return Image.asset('assets/images/nophoto.png');
+                          return Image(
+                            image: const AssetImage('assets/images/nophoto.png'),
+                            // loadingBuilder: (context, child, loadingProgress) {
+                            //   if(((child as Semantics).child as RawImage).image != null){
+                            //     return child;
+                            //   }
+                            //   return const CircularProgressIndicator(color: Colors.red);
+                            // },
+                            frameBuilder: (BuildContext? context, Widget? child, int? frame, bool wasSynchronouslyLoaded) {
+                              _stopwatch.stop();
+                              print('With precacheImage: ${_stopwatch.elapsed.inMilliseconds} milliseconds');
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: child,
+                              );
+                            },
+                          );
                         },
                         fit: BoxFit.cover,
                       ),

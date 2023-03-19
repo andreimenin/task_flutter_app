@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:task_flutter_app/data/task_inherited.dart';
 import 'package:task_flutter_app/routes.dart';
 import 'package:task_flutter_app/screens/initial_screen.dart';
 
@@ -8,8 +7,20 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void didChangeDependencies() {
+    precacheImage(const AssetImage('assets/images/nophoto.png'), context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
