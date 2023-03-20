@@ -42,7 +42,6 @@ class _FormScreenState extends State<FormScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     if(widget.task != null){
       nameController.text = widget.task!.nome;
       difficultyController.text = widget.task!.dificuldade.toString();
@@ -159,14 +158,9 @@ class _FormScreenState extends State<FormScreen> {
                             StackTrace? stackTrace) {
                           return Image(
                             image: const AssetImage('assets/images/nophoto.png'),
-                            // loadingBuilder: (context, child, loadingProgress) {
-                            //   if(((child as Semantics).child as RawImage).image != null){
-                            //     return child;
-                            //   }
-                            //   return const CircularProgressIndicator(color: Colors.red);
-                            // },
                             frameBuilder: (BuildContext? context, Widget? child, int? frame, bool wasSynchronouslyLoaded) {
                               _stopwatch.stop();
+                              // ignore: avoid_print
                               print('With precacheImage: ${_stopwatch.elapsed.inMilliseconds} milliseconds');
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),

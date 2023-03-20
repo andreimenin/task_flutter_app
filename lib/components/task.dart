@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
-import 'package:task_flutter_app/components/backdrop/custom_backdrop/confirm_backdrop.dart';
-import 'package:task_flutter_app/components/backdrop/custom_backdrop/custom_backdrop.dart';
-import 'package:task_flutter_app/components/button/button_outline.dart';
 import 'package:task_flutter_app/components/difficulty.dart';
+import 'package:task_flutter_app/components/imageCustom.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 
+// ignore: must_be_immutable
 class Task extends StatefulWidget {
   final String nome;
   final String foto;
@@ -14,21 +13,21 @@ class Task extends StatefulWidget {
   late Function? functionUpdate;
   late Function? functionRemove;
 
-  Task(this.nome, this.foto, this.dificuldade, this.nivel, {this.functionUpdate});
+  Task(this.nome, this.foto, this.dificuldade, this.nivel, {super.key, this.functionUpdate});
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  CustomBackdrop _customBackdrop = CustomBackdrop();
   // Identificando se a imagem será asset ou tipo network se conter 'http' na url
-  bool assetOrNetwork() {
-    if (widget.foto.contains('http')) {
-      return false;
-    }
-    return true;
-  }
+  // bool assetOrNetwork() {
+  //   if (widget.foto.contains('http')) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +63,7 @@ class _TaskState extends State<Task> {
                               height: 100,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
-                                child: assetOrNetwork()
-                                    ? Image.asset(
-                                        'assets/images/nophoto.png',
-                                        fit: BoxFit.fitWidth,
-                                      )
-                                    : Image.network(
-                                        widget.foto,
-                                        fit: BoxFit.cover,
-                                      ),
+                                child: ImageCustom(image: widget.foto,)
                               ),
                             ),
                             Expanded(
@@ -95,7 +86,7 @@ class _TaskState extends State<Task> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -223,4 +214,7 @@ class _TaskState extends State<Task> {
       ],
     );
   }
+
+
+
 }
