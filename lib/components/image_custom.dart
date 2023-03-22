@@ -22,6 +22,11 @@ class ImageCustomState extends State<ImageCustom> {
   @override
   void initState() {
     super.initState();
+      FlutterError.onError = (FlutterErrorDetails details) {
+      if (details.library == 'image resource service') {
+        return;
+      }
+    };
   }
 
   @override
@@ -46,12 +51,16 @@ class ImageCustomState extends State<ImageCustom> {
             widget.image,
             fit: BoxFit.cover,
             errorBuilder: ((context, error, stackTrace) {
-              Future.delayed(Duration.zero, () async {
+              if(!_isLoaded){
+                // ignore: avoid_print
+                print('\x1B[33m$error\x1B[0m');
+                Future.delayed(Duration.zero, () async {
                   setState(() {
                     _isLoaded = true;
                     isError = true;
                   });
                 });
+              }
                return Container(
                 decoration: const BoxDecoration(color: Color.fromARGB(255, 206, 204, 204)),
                 child: Image.asset('assets/images/nophoto.png'));
@@ -93,7 +102,6 @@ class ImageCustomState extends State<ImageCustom> {
               if (wasSynchronouslyLoaded) {
                 return child;
               }
-              
               return AnimatedOpacity(
                 opacity: loading == true ? 0 : 1,
                 duration: const Duration(milliseconds: 500),
@@ -104,7 +112,6 @@ class ImageCustomState extends State<ImageCustom> {
             },
         ),
       ),
-      
       ],
     ); 
   }
