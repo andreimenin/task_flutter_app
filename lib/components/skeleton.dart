@@ -16,7 +16,7 @@ class SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin,
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _controller = AnimationController(duration: const Duration(milliseconds: 700), vsync: this);
 
     gradientPosition = Tween<double>(
       begin: -3,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:task_flutter_app/components/difficulty.dart';
-import 'package:task_flutter_app/components/imageCustom.dart';
+import 'package:task_flutter_app/components/image_custom.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 
 // ignore: must_be_immutable
@@ -57,7 +57,7 @@ class _TaskState extends State<Task> {
                             Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
-                                color: Colors.black26,
+                                color: Colors.black12,
                               ),
                               width: 72,
                               height: 100,

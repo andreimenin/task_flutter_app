@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:task_flutter_app/components/image_custom.dart';
 import 'package:task_flutter_app/components/task.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
 
@@ -152,25 +153,7 @@ class _FormScreenState extends State<FormScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        imageController.text,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return Image(
-                            image: const AssetImage('assets/images/nophoto.png'),
-                            frameBuilder: (BuildContext? context, Widget? child, int? frame, bool wasSynchronouslyLoaded) {
-                              _stopwatch.stop();
-                              // ignore: avoid_print
-                              print('With precacheImage: ${_stopwatch.elapsed.inMilliseconds} milliseconds');
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: child,
-                              );
-                            },
-                          );
-                        },
-                        fit: BoxFit.cover,
-                      ),
+                      child: ImageCustom(image: imageController.text)
                     ),
                   ),
                   ElevatedButton(

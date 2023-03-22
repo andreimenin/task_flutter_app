@@ -6,7 +6,7 @@ class ImageCustom extends StatefulWidget {
   final String image;
   final bool isWithProgressIndicator;
 
-  const ImageCustom({Key? key, required this.image, this.isWithProgressIndicator = false}) : super(key: key);
+  const ImageCustom({Key? key, required this.image, this.isWithProgressIndicator = true}) : super(key: key);
 
   @override
   createState() => ImageCustomState();
@@ -14,8 +14,10 @@ class ImageCustom extends StatefulWidget {
 
 class ImageCustomState extends State<ImageCustom> {
 
-  bool loading = true;
-  bool isMounted = false;
+  bool loading = false;
+  bool _isLoaded = false;
+
+  bool isError = false;
 
   @override
   void initState() {
@@ -34,8 +36,8 @@ class ImageCustomState extends State<ImageCustom> {
       alignment: AlignmentDirectional.center,
       children: [
         Visibility(
-          maintainState: true,
-          visible: loading == true,
+          //maintainState: true,
+          visible: loading && !_isLoaded,
           child: const Skeleton()),
         Container(
           constraints: const BoxConstraints.expand(),
@@ -44,37 +46,39 @@ class ImageCustomState extends State<ImageCustom> {
             widget.image,
             fit: BoxFit.cover,
             errorBuilder: ((context, error, stackTrace) {
-               return 
-               Image(
-                  image: const AssetImage('assets/images/nophoto.png'),
-                  frameBuilder: (BuildContext? context, Widget? child, int? frame, bool wasSynchronouslyLoaded) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: child,
-                    );
-                  },
-                );
+              Future.delayed(Duration.zero, () async {
+                  setState(() {
+                    _isLoaded = true;
+                    isError = true;
+                  });
+                });
+               return Container(
+                decoration: const BoxDecoration(color: Color.fromARGB(255, 206, 204, 204)),
+                child: Image.asset('assets/images/nophoto.png'));
             }),
             loadingBuilder: (BuildContext context, Widget child,
               ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
+                if (loadingProgress == null && _isLoaded == true) {
                   // The child (AnimatedOpacity) is build with loading == true, and then the setState will change loading to false, which trigger the animation
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Future.delayed(Duration.zero, () async {
-                    setState(() {
-                        loading = false;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          loading = false;
+                        });
+                      }
                     });
                   });
                   return child;
                 }
+
                 Future.delayed(Duration.zero, () async {
-              setState(() {
-                  loading = true;
+                  setState(() {
+                    loading = true;
+                  });
                 });
-              });
             
-                return widget.isWithProgressIndicator ?
+                return widget.isWithProgressIndicator && loadingProgress != null?
                   Center(
                     child: CircularProgressIndicator(
                       value: loadingProgress.expectedTotalBytes != null
@@ -84,29 +88,24 @@ class ImageCustomState extends State<ImageCustom> {
                     ),) : Container();
               },
             frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
+              _isLoaded = frame != null;
+
               if (wasSynchronouslyLoaded) {
                 return child;
               }
-              // Future.delayed(Duration.zero, () async {
-              // setState(() {
-              //     loading = true;
-              //   });
-              // });
+              
               return AnimatedOpacity(
                 opacity: loading == true ? 0 : 1,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeOut,
                 child: child,
-                onEnd: () {
-                  print("aaaaaaaa");
-                  return setState(() {
-                        loading = false;
-                      });
-                    }
+                
               );
             },
         ),
-      )],
+      ),
+      
+      ],
     ); 
   }
   
