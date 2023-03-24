@@ -1,27 +1,30 @@
 // ignore: file_names
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:task_flutter_app/components/skeleton.dart';
 
 class ImageCustom extends StatefulWidget {
   final String image;
-  final bool isWithProgressIndicator;
+  final bool showProgressIndicator;
+  final bool showProgressPercent;
 
-  const ImageCustom({Key? key, required this.image, this.isWithProgressIndicator = true}) : super(key: key);
+  const ImageCustom({Key? key, required this.image, this.showProgressIndicator = true, this.showProgressPercent = true}) : super(key: key);
 
   @override
   createState() => ImageCustomState();
 }
 
-class ImageCustomState extends State<ImageCustom> {
+class ImageCustomState extends State<ImageCustom> with AutomaticKeepAliveClientMixin{
 
   bool loading = false;
   bool _isLoaded = false;
-
   bool isError = false;
 
   @override
   void initState() {
     super.initState();
+
       FlutterError.onError = (FlutterErrorDetails details) {
       if (details.library == 'image resource service') {
         return;
@@ -35,13 +38,17 @@ class ImageCustomState extends State<ImageCustom> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
 
     return Stack(
       alignment: AlignmentDirectional.center,
       children: [
         Visibility(
-          //maintainState: true,
+          maintainState: true,
           visible: loading && !_isLoaded,
           child: const Skeleton()),
         Container(
@@ -67,7 +74,7 @@ class ImageCustomState extends State<ImageCustom> {
             }),
             loadingBuilder: (BuildContext context, Widget child,
               ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null && _isLoaded == true) {
+                if (loadingProgress == null && _isLoaded) {
                   // The child (AnimatedOpacity) is build with loading == true, and then the setState will change loading to false, which trigger the animation
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Future.delayed(Duration.zero, () async {
@@ -87,13 +94,24 @@ class ImageCustomState extends State<ImageCustom> {
                   });
                 });
             
-                return widget.isWithProgressIndicator && loadingProgress != null?
+                return (widget.showProgressIndicator || widget.showProgressPercent) && loadingProgress != null?
                   Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        widget.showProgressPercent ? 
+                        Text(
+                          ((loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!)*100).toStringAsFixed(0),
+                          style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w500, fontSize: 12),
+                                ) : Container(),
+                        widget.showProgressIndicator ? 
+                        CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ) : Container()],
                     ),) : Container();
               },
             frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
@@ -107,7 +125,6 @@ class ImageCustomState extends State<ImageCustom> {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeOut,
                 child: child,
-                
               );
             },
         ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:task_flutter_app/components/task.dart';
 import 'package:task_flutter_app/data/task_dao.dart';
@@ -74,6 +74,7 @@ class _InitialScreenState extends State<InitialScreen> {
                   if (snapshot.hasData && items != null) {
                     if (items.isNotEmpty) {
                       return ListView.builder(
+                          cacheExtent: 99999,
                           itemCount: items.length,
                           itemBuilder: (BuildContext context, int index) {
                             final Task tarefa = items[index];
