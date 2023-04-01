@@ -1,6 +1,8 @@
+// ignore: file_names
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:task_flutter_app/components/skeleton.dart';
-
 
 class ImageCustom extends StatefulWidget {
   final String image;
@@ -14,6 +16,7 @@ class ImageCustom extends StatefulWidget {
 }
 
 class ImageCustomState extends State<ImageCustom> with AutomaticKeepAliveClientMixin{
+
   bool loading = false;
   bool _isLoaded = false;
   bool isError = false;
@@ -21,6 +24,7 @@ class ImageCustomState extends State<ImageCustom> with AutomaticKeepAliveClientM
   @override
   void initState() {
     super.initState();
+
       FlutterError.onError = (FlutterErrorDetails details) {
       if (details.library == 'image resource service') {
         return;
@@ -70,12 +74,11 @@ class ImageCustomState extends State<ImageCustom> with AutomaticKeepAliveClientM
             }),
             loadingBuilder: (BuildContext context, Widget child,
               ImageChunkEvent? loadingProgress) {
-               // print("loadingBuilder" + loadingProgress.toString());
                 if (loadingProgress == null && _isLoaded) {
                   // The child (AnimatedOpacity) is build with loading == true, and then the setState will change loading to false, which trigger the animation
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Future.delayed(Duration.zero, () async {
-                      if (mounted && loading) {
+                      if (mounted) {
                         setState(() {
                           loading = false;
                         });
@@ -85,13 +88,11 @@ class ImageCustomState extends State<ImageCustom> with AutomaticKeepAliveClientM
                   return child;
                 }
 
-              if(!loading){
                 Future.delayed(Duration.zero, () async {
                   setState(() {
                     loading = true;
                   });
                 });
-              }
             
                 return (widget.showProgressIndicator || widget.showProgressPercent) && loadingProgress != null?
                   Center(
@@ -114,7 +115,6 @@ class ImageCustomState extends State<ImageCustom> with AutomaticKeepAliveClientM
                     ),) : Container();
               },
             frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
-              //print("framebuilder " + frame.toString());
               _isLoaded = frame != null;
 
               if (wasSynchronouslyLoaded) {
