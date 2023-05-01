@@ -16,10 +16,11 @@ class CustomBackdrop {
     
     double parentHeight = 0;
     double childHeight = 0.0001;
-    bool isScrollEnd = false;
-
     double maxExtent = 0;
     double extent = 0;
+    double heightOfDevice = 0;
+    double notificationBarSize = 0;
+    double paddingBottom = 0;
 
     DraggableScrollableController dragControl = DraggableScrollableController();
 
@@ -36,29 +37,20 @@ class CustomBackdrop {
             double headerHeight = 30;
             MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-            double heightOfDevice = mediaQueryData.size.height;
-            double notificationBarSize = MediaQueryData.fromWindow(window).padding.top;
-            double paddingBottom = mediaQueryData.viewInsets.bottom;
+            heightOfDevice = mediaQueryData.size.height;
+            notificationBarSize = MediaQueryData.fromWindow(window).padding.top;
 
             SchedulerBinding.instance.addPostFrameCallback((_) async {
               // ignore: prefer_typing_uninitialized_variables
-              var renderBox;
+              RenderBox? renderBox;
               if (globalKeyColumn.currentContext?.findRenderObject() != null) {
                 renderBox = globalKeyColumn.currentContext!.findRenderObject() as RenderBox;
               }
-              setState((){
-                parentHeight = (renderBox?.size.height + headerHeight + paddingBottom);
-              });
-              
-              if(isScrollEnd && (extent - ((headerHeight + paddingBottom) /heightOfDevice)) > childHeight){
-                await dragControl.animateTo(
-                    maxExtent,
-                    curve: Curves.easeOut,
-                    duration: Duration(milliseconds: (parentHeight/7).round()),
-                );
-              }
-              else if(isScrollEnd && (double.parse(dragControl.size.toStringAsFixed(1))  == extent)){
-                Navigator.of(contextBuilder).maybePop();
+              if(parentHeight == 0 || paddingBottom != mediaQueryData.viewInsets.bottom){
+                paddingBottom = mediaQueryData.viewInsets.bottom;
+                setState((){
+                  parentHeight = (renderBox!.size.height + headerHeight + paddingBottom);
+                });
               }
             });
 
@@ -104,13 +96,19 @@ class CustomBackdrop {
                                 padding: const EdgeInsets.only(top: 30),
                                 child: NotificationListener<ScrollNotification>(
                                   onNotification: (notification){
-                                    if (notification is ScrollStartNotification) {
-                                     
-                                        isScrollEnd = false;
-                                    } else if (notification is ScrollUpdateNotification) {
-                                        isScrollEnd = false;
-                                    } else if (notification is ScrollEndNotification) {
-                                        isScrollEnd = true;
+                                    if (notification is ScrollEndNotification) {
+                                        Future.delayed(Duration.zero, () async {
+                                          if((extent - ((headerHeight + paddingBottom) /heightOfDevice)) > childHeight){
+                                              dragControl.animateTo(
+                                              maxExtent,
+                                              curve: Curves.easeOut,
+                                              duration: Duration(milliseconds: (parentHeight/7).round()),
+                                          );
+                                        }
+                                        else if((double.parse(dragControl.size.toStringAsFixed(1))  == extent)){
+                                          Navigator.of(contextBuilder).maybePop();
+                                        }
+                                      });
                                     }
                                     return true;
                                   },

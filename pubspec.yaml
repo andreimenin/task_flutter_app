@@ -41,6 +41,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   sqflite: ^2.0.3+1
 
+dependency_overrides:
+  modal_bottom_sheet: ^3.0.0-pre 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
